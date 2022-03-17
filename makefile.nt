@@ -1,0 +1,47 @@
+!IF "$(EW_DEBUG)" == "1"
+!ELSE
+NODEBUG=1
+!ENDIF
+
+!include <Win32.Mak>
+
+CFLAGS  = $(cflags)    $(cdebug) $(cvarsmt)   $(GLOBALFLAGS)
+LDFLAGS = $(conlflags) $(ldebug) $(conlibsmt)
+
+B = $(EW_HOME)\$(EW_VERSION)\bin
+L = $(EW_HOME)\$(EW_VERSION)\lib
+
+APP = pick_ew
+
+OBJS = \
+	$(APP).obj \
+	compare.obj \
+	config.obj \
+	index.obj \
+	initvar.obj \
+	pick_ra.obj \
+	report.obj \
+	restart.obj \
+	sample.obj \
+	scan.obj \
+	sign.obj \
+	stalist.obj
+
+EW_LIBS = \
+	/LIBPATH:$L \
+	swap.obj \
+	trheadconv.obj \
+	libew_mt.lib
+
+$B\$(APP).exe: $(OBJS)
+	$(link) /out:$@ $(LDFLAGS) $(OBJS) $(EW_LIBS)
+
+
+# Clean-up rules
+clean: PHONY
+	-del a.out core *.o *.obj *% *~
+
+clean_bin: PHONY
+	-del $B\$(APP) $B\$(APP).exe
+
+PHONY:
