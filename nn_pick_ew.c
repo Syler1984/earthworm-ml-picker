@@ -112,6 +112,8 @@
 #include "trheadconv.h"
 #include "nn_pick_ew.h"
 
+#define PROGRAM_NAME "nn_pick_ew"
+
 /* Function prototypes
    *******************/
 int  GetConfig( char *, GPARM * );
@@ -167,7 +169,7 @@ int main( int argc, char **argv )
    ****************************/
    if ( argc != 2 )
    {
-      fprintf( stderr, "Usage: pick_ew <configfile>\n" );
+      fprintf( stderr, "Usage: " PROGRAM_NAME " <configfile>\n" );
       fprintf( stderr, "Version: %s\n", PICKEW_VERSION);
       return -1;
    }
@@ -176,13 +178,13 @@ int main( int argc, char **argv )
 /* Initialize name of log-file & open it
    *************************************/
    logit_init( configfile, 0, 256, 1 );
-   logit( "t", "pick_ew: Starting Version:%s\n", PICKEW_VERSION );
+   logit( "t", PROGRAM_NAME "  Starting Version:%s\n", PICKEW_VERSION );
 
 /* Get parameters from the configuration files
    *******************************************/
    if ( GetConfig( configfile, &Gparm ) == -1 )
    {
-      logit( "e", "pick_ew: GetConfig() failed. Exiting.\n" );
+      logit( "e", PROGRAM_NAME ": GetConfig() failed. Exiting.\n" );
       return -1;
    }
 
@@ -190,7 +192,7 @@ int main( int argc, char **argv )
    **************************************/
    if ( GetEwh( &Ewh ) < 0 )
    {
-      logit( "e", "pick_ew: GetEwh() failed. Exiting.\n" );
+      logit( "e", PROGRAM_NAME ": GetEwh() failed. Exiting.\n" );
       return -1;
    }
 
@@ -201,7 +203,7 @@ int main( int argc, char **argv )
       Gparm.nGetLogo = 2;
       Gparm.GetLogo  = (MSG_LOGO *) calloc( Gparm.nGetLogo, sizeof(MSG_LOGO) );
       if( Gparm.GetLogo == NULL ) {
-         logit( "e", "pick_ew: Error allocating space for GetLogo. Exiting\n" );
+         logit( "e", PROGRAM_NAME ": Error allocating space for GetLogo. Exiting\n" );
          return -1;
       }
       Gparm.GetLogo[0].instid = Ewh.InstIdWild;
@@ -222,7 +224,7 @@ int main( int argc, char **argv )
    myPid = getpid();
    if ( myPid == -1 )
    {
-      logit( "e", "pick_ew: Can't get my pid. Exiting.\n" );
+      logit( "e", PROGRAM_NAME ": Can't get my pid. Exiting.\n" );
       free( Gparm.GetLogo );
       free( Gparm.StaFile );
       return -1;
@@ -238,7 +240,7 @@ int main( int argc, char **argv )
    TraceBuf = (char *) malloc( (size_t) InBufl );
    if ( TraceBuf == NULL )
    {
-      logit( "et", "pick_ew: Cannot allocate waveform buffer\n" );
+      logit( "et", PROGRAM_NAME ": Cannot allocate waveform buffer\n" );
       free( Gparm.GetLogo );
       free( Gparm.StaFile );
       return -1;
@@ -256,7 +258,7 @@ int main( int argc, char **argv )
    *************************************************************/
    if ( GetStaList( &StaArray, &Nsta, &Gparm ) == -1 )
    {
-      logit( "e", "pick_ew: GetStaList() failed. Exiting.\n" );
+      logit( "e", PROGRAM_NAME ": GetStaList() failed. Exiting.\n" );
       free( Gparm.GetLogo );
       free( Gparm.StaFile );
       free( StaArray );
@@ -265,7 +267,7 @@ int main( int argc, char **argv )
 
    if ( Nsta == 0 )
    {
-      logit( "et", "pick_ew: Empty station list(s). Exiting." );
+      logit( "et", PROGRAM_NAME ": Empty station list(s). Exiting." );
       free( Gparm.GetLogo );
       free( Gparm.StaFile );
       free( StaArray );
@@ -330,20 +332,20 @@ int main( int argc, char **argv )
       }
 
       if ( rc == GET_NOTRACK )
-         logit( "et", "pick_ew: Tracking error (NTRACK_GET exceeded)\n");
+         logit( "et", PROGRAM_NAME ": Tracking error (NTRACK_GET exceeded)\n");
 
       if ( rc == GET_MISS_LAPPED )
-         logit( "et", "pick_ew: Missed msgs (lapped on ring) "
+         logit( "et", PROGRAM_NAME ": Missed msgs (lapped on ring) "
                 "before i:%d m:%d t:%d seq:%d\n",
                 (int)logo.instid, (int)logo.mod, (int)logo.type, (int)seq );
 
       if ( rc == GET_MISS_SEQGAP )
-         logit( "et", "pick_ew: Gap in sequence# before i:%d m:%d t:%d seq:%d\n",
+         logit( "et", PROGRAM_NAME ": Gap in sequence# before i:%d m:%d t:%d seq:%d\n",
                 (int)logo.instid, (int)logo.mod, (int)logo.type, (int)seq );
 
       if ( rc == GET_TOOBIG )
       {
-         logit( "et", "pick_ew: Retrieved msg is too big: i:%d m:%d t:%d len:%ld\n",
+         logit( "et", PROGRAM_NAME ": Retrieved msg is too big: i:%d m:%d t:%d len:%ld\n",
                 (int)logo.instid, (int)logo.mod, (int)logo.type, MsgLen );
          continue;
       }
@@ -354,14 +356,14 @@ int main( int argc, char **argv )
       {
          if ( (wave_swap_return = WaveMsgMakeLocal( TraceHead )) < 0 )
          {
-            logit( "et", "pick_ew: WaveMsgMakeLocal() error.\n" );
+            logit( "et", PROGRAM_NAME ": WaveMsgMakeLocal() error.\n" );
             continue;
          }
       }
       else
          if ( (wave_swap_return = WaveMsg2MakeLocal( Trace2Head )) < 0 )
          {
-            logit( "et", "pick_ew: WaveMsg2MakeLocal error. %s.%s.%s.%s error=%d\n",
+            logit( "et", PROGRAM_NAME ": WaveMsg2MakeLocal error. %s.%s.%s.%s error=%d\n",
 		Trace2Head->sta, Trace2Head->net, Trace2Head->chan, Trace2Head->loc, wave_swap_return );
             continue;
          }
@@ -480,7 +482,7 @@ int main( int argc, char **argv )
          if ( tport_putmsg( &Gparm.OutRegion, &hrtlogo, lineLen, line ) !=
               PUT_OK )
          {
-            logit( "et", "pick_ew: Error sending heartbeat. Exiting." );
+            logit( "et", PROGRAM_NAME ": Error sending heartbeat. Exiting." );
             break;
          }
       }
@@ -514,48 +516,48 @@ int GetEwh( EWH *Ewh )
 {
    if ( GetLocalInst( &Ewh->MyInstId ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting MyInstId.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting MyInstId.\n" );
       return -1;
    }
 
    if ( GetInst( "INST_WILDCARD", &Ewh->InstIdWild ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting InstIdWild.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting InstIdWild.\n" );
       return -2;
    }
    if ( GetModId( "MOD_WILDCARD", &Ewh->ModIdWild ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting ModIdWild.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting ModIdWild.\n" );
       return -3;
    }
    if ( GetType( "TYPE_HEARTBEAT", &Ewh->TypeHeartBeat ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting TypeHeartbeat.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting TypeHeartbeat.\n" );
       return -4;
    }
    if ( GetType( "TYPE_ERROR", &Ewh->TypeError ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting TypeError.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting TypeError.\n" );
       return -5;
    }
    if ( GetType( "TYPE_PICK_SCNL", &Ewh->TypePickScnl ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting TypePickScnl.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting TypePickScnl.\n" );
       return -6;
    }
    if ( GetType( "TYPE_CODA_SCNL", &Ewh->TypeCodaScnl ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting TypeCodaScnl.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting TypeCodaScnl.\n" );
       return -7;
    }
    if ( GetType( "TYPE_TRACEBUF", &Ewh->TypeTracebuf ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting TYPE_TRACEBUF.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting TYPE_TRACEBUF.\n" );
       return -8;
    }
    if ( GetType( "TYPE_TRACEBUF2", &Ewh->TypeTracebuf2 ) != 0 )
    {
-      logit( "e", "pick_ew: Error getting TYPE_TRACEBUF2.\n" );
+      logit( "e", PROGRAM_NAME ": Error getting TYPE_TRACEBUF2.\n" );
       return -9;
    }
    return 0;
