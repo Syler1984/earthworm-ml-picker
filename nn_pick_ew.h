@@ -111,6 +111,7 @@ typedef struct {
 } STAFILE;
 
 typedef struct {
+   char *ModelFile;
    STAFILE  *StaFile;       /* Name of file(s) with SCNL info */
    char *PickIndexDir;      /* an optional directory to place pick index files, to get them out of the param dir */
    int       nStaFile;      /* Number of StaFile commands given */

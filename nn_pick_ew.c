@@ -120,6 +120,9 @@ int main( int argc, char **argv )
       return -1;
    }
 
+   printf("Config loaded! ModelFile: \"%s\"\n", Gparm.ModelFile);
+   return 0;
+
 /* Look up info in the earthworm.h tables
    **************************************/
    if ( GetEwh( &Ewh ) < 0 )

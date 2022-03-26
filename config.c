@@ -118,6 +118,11 @@ int GetConfig( char *config_file, GPARM *Gparm )
 
 /* Read configuration parameters
    *****************************/
+         else if ( k_its( "ModelFile" ) )
+         {
+             Gparm->ModelFile = strdup(k_str());
+         }
+
          else if ( k_its( "StaFile" ) )
          {
             str = k_str();
