@@ -1,65 +1,3 @@
-/*
- *   THIS FILE IS UNDER RCS - DO NOT MODIFY UNLESS YOU HAVE
- *   CHECKED IT OUT USING THE COMMAND CHECKOUT.
- *
- *    $Id: pick_ew.c 7410 2018-05-03 17:53:43Z alexander $
- *
- *    Revision history:
- *     $Log$
- *     Revision 1.14  2007/12/16 19:18:43  paulf
- *     fixed an improper use of long for 4 byte sample data, some OS have long as 8bytes.
- *
- *     Revision 1.13  2007/03/13 14:42:08  paulf
- *     fixed another time_t printing
- *
- *     Revision 1.12  2007/02/26 14:01:10  paulf
- *     fixed a heartbeat fix for long casting of time_t
- *
- *     Revision 1.11  2007/02/26 13:44:40  paulf
- *     fixed heartbeat sprintf() to cast time_t as long
- *
- *     Revision 1.10  2006/09/20 22:44:07  dietz
- *     Modified to be able to process multiple "StaFile" commands for setting
- *     per-channel picking parameters.
- *
- *     Revision 1.9  2006/03/17 18:35:57  dietz
- *     Added message logo and sequence number information to transport error
- *     logging.
- *
- *     Revision 1.8  2005/04/08 23:57:19  dietz
- *     Added new config command "GetLogo" so pick_ew can select which logos
- *     to process. If no "GetLogo" commands are included, the default behavior
- *     is to process all TYPE_TRACEBUF and TYPE_TRACEBUF2 messages in InRing.
- *
- *     Revision 1.7  2004/05/17 19:51:59  kohler
- *     Fixed dangling-else bug.  WMK
- *
- *     Revision 1.6  2004/04/30 20:45:26  dietz
- *     oops, forgot a semicolon
- *
- *     Revision 1.5  2004/04/30 20:43:36  dietz
- *     made TypeTracebuf2 the primary logo msgtype
- *
- *     Revision 1.4  2004/04/29 22:44:51  kohler
- *     Pick_ew now produces new TYPE_PICK_SCNL and TYPE_CODA_SCNL messages.
- *     The station list file now contains SCNLs, rather than SCNs.
- *     Input waveform messages may be of either TYPE_TRACEBUF or TYPE_TRACEBUF2.
- *     If the input waveform message is of TYPE_TRACEBUF (without a location code),
- *     the location code is assumed to be "--".  WMK 4/29/04
- *
- *     Revision 1.3  2002/05/16 16:59:42  patton
- *     Made logit changes
- *
- *     Revision 1.2  2001/05/09 22:40:47  dietz
- *     Changed to shut down gracefully if the transport flag is
- *     set to TERMINATE or myPid.
- *
- *     Revision 1.1  2000/02/14 19:06:49  lucky
- *     Initial revision
- *
- *
- */
-
       /*****************************************************************
        *                           pick_ew.c                           *
        *                                                               *
@@ -114,6 +52,9 @@
 
 #define PROGRAM_NAME "nn_pick_ew"
 
+   /* version introduced with 0.1  */
+#define PROGRAM_VERSION "0.1 2021-03-26"
+
 /* Function prototypes
    *******************/
 int  GetConfig( char *, GPARM * );
@@ -127,15 +68,6 @@ void Interpolate( STATION *, char *, int );
 int  GetEwh( EWH * );
 void Sample( int, STATION * );
 
-
-/* version introduced with 1.0.1  */
-/* version 1.0.2 2012-12-07 NoCodaHorizontal added */
-/* version 1.0.3 2013-02-02 more debug logging added */
-/* version 1.0.4 2014-05-27 changed to use consistent tport commands */
-/* version 1.0.5 2014-06-04 no longer rolls over pick-id at 999999, only at MAX INT */
-/* version 1.0.6 2015-02-17 made DeadSta check be ignored if value is set <= 0.0 */
-/* version 1.0.7 2018-05-03 attempt to create PickIndexDir if specified and non-existent */
-#define PICKEW_VERSION "1.0.7 2018-05-03"
    
       /***********************************************************
        *              The main program starts here.              *
@@ -170,7 +102,7 @@ int main( int argc, char **argv )
    if ( argc != 2 )
    {
       fprintf( stderr, "Usage: " PROGRAM_NAME " <configfile>\n" );
-      fprintf( stderr, "Version: %s\n", PICKEW_VERSION);
+      fprintf( stderr, "Version: %s\n", PROGRAM_VERSION);
       return -1;
    }
    configfile = argv[1];
@@ -178,7 +110,7 @@ int main( int argc, char **argv )
 /* Initialize name of log-file & open it
    *************************************/
    logit_init( configfile, 0, 256, 1 );
-   logit( "t", PROGRAM_NAME "  Starting Version:%s\n", PICKEW_VERSION );
+   logit( "t", PROGRAM_NAME "  Starting Version:%s\n", PROGRAM_VERSION );
 
 /* Get parameters from the configuration files
    *******************************************/
