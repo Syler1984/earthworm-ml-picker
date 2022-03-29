@@ -97,6 +97,8 @@ int main( int argc, char **argv )
    pid_t         myPid;            /* Process id of this process */
    unsigned char seq;        /* msg sequence number from tport_copyfrom() */
 
+   logit("o", PROGRAM_NAME ": Starting!");
+
 /* Check command line arguments
    ****************************/
    if ( argc != 2 )
@@ -119,6 +121,8 @@ int main( int argc, char **argv )
       logit( "e", PROGRAM_NAME ": GetConfig() failed. Exiting.\n" );
       return -1;
    }
+
+   logit("o", PROGRAM_NAME ": Config file read!");
 
 /* Look up info in the earthworm.h tables
    **************************************/
@@ -205,6 +209,8 @@ int main( int argc, char **argv )
       free( StaArray );
       return -1;
    }
+
+   logit("o", PROGRAM_NAME ": Station list read!");
 
 /* Sort the station list by SCNL
    *****************************/
