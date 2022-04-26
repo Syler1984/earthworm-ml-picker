@@ -97,8 +97,6 @@ int main( int argc, char **argv )
    pid_t         myPid;            /* Process id of this process */
    unsigned char seq;        /* msg sequence number from tport_copyfrom() */
 
-   logit("o", PROGRAM_NAME ": Starting!");
-
 /* Check command line arguments
    ****************************/
    if ( argc != 2 )
@@ -122,7 +120,7 @@ int main( int argc, char **argv )
       return -1;
    }
 
-   logit("o", PROGRAM_NAME ": Config file read!");
+   logit("", PROGRAM_NAME ": Config file read!");
 
 /* Look up info in the earthworm.h tables
    **************************************/
@@ -210,8 +208,6 @@ int main( int argc, char **argv )
       return -1;
    }
 
-   logit("o", PROGRAM_NAME ": Station list read!");
-
 /* Sort the station list by SCNL
    *****************************/
    qsort( StaArray, Nsta, sizeof(STATION), CompareSCNL );
@@ -262,6 +258,8 @@ int main( int argc, char **argv )
    *******************************************/
       rc = tport_copyfrom( &Gparm.InRegion, Gparm.GetLogo, (short)Gparm.nGetLogo, 
                            &logo, &MsgLen, TraceBuf, MAX_TRACEBUF_SIZ, &seq );
+
+      logit("", PROGRAM_NAME ": Message read!");
 
       if ( rc == GET_NONE )
       {
