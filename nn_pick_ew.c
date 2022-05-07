@@ -242,9 +242,13 @@ int main( int argc, char **argv )
 
 /* Loop to read waveform messages and invoke the picker
    ****************************************************/
+/* MAIN LOOP */
+   logit("", PROGRAM_NAME ": Entering main loop!");
    while ( tport_getflag( &Gparm.InRegion ) != TERMINATE  &&
            tport_getflag( &Gparm.InRegion ) != myPid )
    {
+      logit("", PROGRAM_NAME ": Loop cycle!");
+      
       char    type[3];
       STATION key;              /* Key for binary search */
       STATION *Sta;             /* Pointer to the station being processed */
@@ -423,6 +427,7 @@ int main( int argc, char **argv )
          }
       }
    }
+   logit("", PROGRAM_NAME ": Exiting main loop!");
 
 /* Detach from the ring buffers
    ****************************/
