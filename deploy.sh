@@ -6,7 +6,7 @@ then echo "No branch name provided, using \"$BRANCH_NAME\""
 else BRANCH_NAME=$1
 fi
 
-if [ "$1" != "make"]
+if [ "$1" != "make" ]
 then
 # Fetching remote changes
 echo "Fetching remote changes.."
