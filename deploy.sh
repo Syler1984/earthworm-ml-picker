@@ -7,6 +7,7 @@ else BRANCH_NAME=$1
 fi
 
 if [ "$1" != "make"]
+then
 # Fetching remote changes
 echo "Fetching remote changes.."
 git fetch
