@@ -243,7 +243,7 @@ int main( int argc, char **argv )
 /* Loop to read waveform messages and invoke the picker
    ****************************************************/
 /* MAIN LOOP */
-   logit("", PROGRAM_NAME ": Entering main loop!");
+   logit("", PROGRAM_NAME ": Entering main loop!\n");
    while ( tport_getflag( &Gparm.InRegion ) != TERMINATE  &&
            tport_getflag( &Gparm.InRegion ) != myPid )
    {
@@ -396,7 +396,12 @@ int main( int argc, char **argv )
             Sample( TraceLong[i], Sta );
       }
       else
-         PickRA( Sta, TraceBuf, &Gparm, &Ewh );
+      {
+          logit("", "BEFORE PickRA!\n");
+          PickRA(Sta, TraceBuf, &Gparm, &Ewh);
+      }
+         
+      logit("", "AFTER PickRA!\n");
 
 /* Save time and amplitude of the end of the current message
    *********************************************************/
@@ -424,7 +429,7 @@ int main( int argc, char **argv )
          }
       }
    }
-   logit("", PROGRAM_NAME ": Exiting main loop!");
+   logit("", PROGRAM_NAME ": Exiting main loop!\n");
 
 /* Detach from the ring buffers
    ****************************/
