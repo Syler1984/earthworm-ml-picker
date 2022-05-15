@@ -8,12 +8,14 @@ fi
 
 if [ "$1" != "make"]
 # Fetching remote changes
+echo "Fetching remote changes.."
 git fetch
 git checkout $BRANCH_NAME
 git pull
 fi
 
 # Compiling
+echo "Compiling.."
 make -f $MAKEFILE_NAME
 make -f $MAKEFILE_NAME clean
 
