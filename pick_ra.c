@@ -115,7 +115,7 @@ void PickRA( STATION *Sta, char *WaveBuf, GPARM *Gparm, EWH *Ewh )
       /* Next, go into search mode */
    }
 
-   logit("", "Before search mode!\n")
+   logit("", "Before search mode!\n");
 /* Search mode
    ***********/
    while ( 1 )
