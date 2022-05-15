@@ -268,6 +268,8 @@ int main( int argc, char **argv )
          continue;
       }
 
+      logit("", "STEP 1\n");
+
       if ( rc == GET_NOTRACK )
          logit( "et", PROGRAM_NAME ": Tracking error (NTRACK_GET exceeded)\n");
 
@@ -286,6 +288,8 @@ int main( int argc, char **argv )
                 (int)logo.instid, (int)logo.mod, (int)logo.type, MsgLen );
          continue;
       }
+
+      logit("", "STEP 2\n");
 
 /* If necessary, swap bytes in tracebuf message
    ********************************************/
@@ -310,6 +314,8 @@ int main( int argc, char **argv )
       if ( logo.type == Ewh.TypeTracebuf )
          Trace2Head = TrHeadConv( TraceHead );
 
+      logit("", "STEP 3\n");
+
 /* Look up SCNL number in the station list
    ***************************************/
       {
@@ -330,6 +336,8 @@ int main( int argc, char **argv )
       if ( Sta == NULL )      /* SCNL not found */
          continue;
 
+      logit("", "STEP 4\n");
+
 /* Do this the first time we get a message with this SCNL
    ******************************************************/
       if ( Sta->first == 1 )
@@ -338,6 +346,8 @@ int main( int argc, char **argv )
          Sta->first = 0;
          continue;
       }
+
+      logit("", "STEP 5\n");
 
 /* If the samples are shorts, make them longs (actually just int's now since long could be 8 bytes!)
    ******************************************/
@@ -366,6 +376,8 @@ int main( int argc, char **argv )
       if ( (GapSize > 1) && (GapSize <= Gparm.MaxGap) )
          Interpolate( Sta, TraceBuf, GapSize );
 
+      logit("", "STEP 6\n");
+
 /* Announce large sample gaps
    **************************/
       if ( GapSize > Gparm.MaxGap )
@@ -386,6 +398,7 @@ int main( int argc, char **argv )
          tport_putmsg( &Gparm.OutRegion, &logo, lineLen, errmsg );
       }
 
+      logit("", "STEP 7\n");
 /* For big gaps, enter restart mode. In restart mode, calculate
    STAs and LTAs without picking.  Start picking again after a
    specified number of samples has been processed.
