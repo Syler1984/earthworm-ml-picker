@@ -57,6 +57,10 @@ int ScanForEvent( STATION *Sta, GPARM *Gparm, char *WaveBuf, int *sample_index )
    ***********************************************/
    Pick->status = Coda->status = 0;
 
+   char debug_msg[50];
+   sprintf(debug_msg, "ML scanner: wave buffer read (%d - length)", WaveHead->nsamp);
+   logit("", debug_msg);
+
 /* Loop through all samples in the message
    ***************************************/
    while ( ++(*sample_index) < WaveHead->nsamp )

@@ -247,7 +247,6 @@ int main( int argc, char **argv )
    while ( tport_getflag( &Gparm.InRegion ) != TERMINATE  &&
            tport_getflag( &Gparm.InRegion ) != myPid )
    {
-      logit("", PROGRAM_NAME ": Loop cycle!");
       
       char    type[3];
       STATION key;              /* Key for binary search */
@@ -262,8 +261,6 @@ int main( int argc, char **argv )
    *******************************************/
       rc = tport_copyfrom( &Gparm.InRegion, Gparm.GetLogo, (short)Gparm.nGetLogo, 
                            &logo, &MsgLen, TraceBuf, MAX_TRACEBUF_SIZ, &seq );
-
-      logit("", PROGRAM_NAME ": Message read!");
 
       if ( rc == GET_NONE )
       {
