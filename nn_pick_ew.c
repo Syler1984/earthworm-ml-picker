@@ -120,7 +120,7 @@ int main( int argc, char **argv )
       return -1;
    }
 
-   logit("", PROGRAM_NAME ": Config file read!");
+   logit("", PROGRAM_NAME ": Config file read!\n");
 
 /* Look up info in the earthworm.h tables
    **************************************/
